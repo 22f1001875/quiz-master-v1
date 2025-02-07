@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-signin w-100 m-auto d-flex flex-column align-items-center justify-content-center vh-100" style="max-width: 350px;">
+  <form>
+    <img class="mb-4" src="{{ url_for('static', filename='images/1.png') }}" alt="1" width="314" height="284">
+    <h1 class="h3 mb-3 fw-normal">Sign in or <a href="">Sign Up</a></h1>
+
+    <div class="form-floating">
+      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <label for="floatingPassword">Password</label>
+    </div>
+    <br>
+    <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+  </form>
+</div>
+{% endblock %}
