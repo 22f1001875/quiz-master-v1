@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-signin w-100 m-auto d-flex flex-column align-items-center justify-content-center vh-100" style="max-width: 350px;">
+<form action="/register" method="post">
+    <img class="mb-4" src="{{ url_for('static', filename='images/1.png') }}" alt="1" width="314" height="284">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input type="email" class="form-control" name="mail" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label for="InputName" class="form-label">Full Name</label>
+        <input type="text" class="form-control" name="fname" id="InputName">
+    </div>
+    <div class="mb-3">
+        <label for="InputQual" class="form-label">Qualification</label>
+        <input type="text" class="form-control" name="qual" id="InputQual">
+    </div>
+    <div class="mb-3">
+        <label for="InputDate" class="form-label">Date of Birth</label>
+        <input type="date" class="form-control" name="dob" id="InputDate">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="password" class="form-control" name="pwd" id="exampleInputPassword1">
+    </div>
+    <br>
+    <button class="btn btn-primary w-100 py-2" type="submit">Register</button>
+  </form>
+</div>
+{% endblock %}
