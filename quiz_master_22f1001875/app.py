@@ -8,6 +8,7 @@ app = None
 def start_app():
     app=Flask(__name__,template_folder="templates")
     app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///quizmasterdb.sqlite3"
+    app.config['SECRET_KEY'] = os.urandom(24).hex()
     db.init_app(app)
     app.app_context().push()
     app.debug = True

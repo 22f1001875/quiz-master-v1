@@ -1,1 +1,40 @@
-Hi {{name}}
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<br>
+<div class="mx-4">
+  <a href="/addsub" class="btn btn-warning mb-3">Add Subjects</a>
+      {% if subjects %}
+        <div class="row">
+          {% for subject in subjects %}
+            <div class="col-sm-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h1 class="card-title display-3 font-monospace">{{ subject.name }}</h1>
+                  <table class="table">
+                  {%for chapter in subject.chapters%}
+                  <tr>
+                    <td><em>{{ chapter.name }}</em></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="#" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a></td>
+                    <td></td>
+                    <td><a href="/delc/{{chapter.id}}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Delete</a></td>
+                  </tr>                
+                  {%endfor%}
+                </table>
+                  <a href="/addchap/{{subject.id}}" class="btn btn-secondary">Add Chapters</a>
+                  <a href="/dels/{{subject.id}}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+            {% if loop.index is divisibleby(2) and not loop.last %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+  {% endblock %}

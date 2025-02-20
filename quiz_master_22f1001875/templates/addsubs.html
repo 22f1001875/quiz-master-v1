@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="m-auto d-flex align-items-center justify-content-center vh-100">
+<form action="/addsub" method="post">
+    <div class="mb-3">
+        <label for="InputName" class="form-label">Subject Name</label>
+        <input type="text" class="form-control" name="sname" id="InputName">
+    </div>
+    <div class="mb-3">
+        <label for="floatingTextarea2">Description</label>
+        <textarea class="form-control" name="description" id="floatingTextarea2" style="height: 100px"></textarea>
+      </div>   
+    <br>
+    <button class="btn btn-primary w-100 py-2" type="submit">Add Chapters</button>
+  </form>
+</div>
+{% endblock %}

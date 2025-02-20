@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+{%if message%}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {%endif%}
+<div class="m-auto d-flex align-items-center justify-content-center vh-100">
+<form action="/addchap/{{sub_id}}" method="post">
+    <div class="mb-3">
+        <label for="InputName" class="form-label">Chapter Name</label>
+        <input type="text" class="form-control" name="cname" id="InputName">
+    </div> 
+    <br>
+    <button class="btn btn-primary w-100 py-2" type="submit">Add Question?</button>
+  </form>
+</div>
+{% endblock %}
