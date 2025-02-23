@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br>
+<div class="container">
+    <h2>Update Quiz</h2>
+    <form action="/quizedit/{{ q_id }}" method="post">
+        <div class="mb-3">
+            <label for="InputQual" class="form-label">Timeduration in minutes</label>
+            <input type="text" class="form-control" name="timed" id="InputQual">
+        </div>
+        <div class="mb-3">
+            <label for="InputDate" class="form-label">Date of quiz</label>
+            <input type="date" class="form-control" name="doq" id="InputDate">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Remarks</label>
+            <input type="text" class="form-control" name="remarks" id="exampleInputPassword1">
+        </div>
+        <br>
+        <button class="btn btn-primary w-100 py-2" type="submit">Add</button>
+    </form>
+</div>
+{% endblock %}

@@ -29,6 +29,7 @@ class Quiz(db.Model):
     time_duration=db.Column(db.Integer,nullable=False)
     remarks=db.Column(db.Text)
     c_id=db.Column(db.Integer,db.ForeignKey('chapter.id',ondelete="CASCADE"))
+    quest = db.relationship("Questions", backref="quiz", lazy=True)
 
 class Questions(db.Model):
     id=db.Column(db.Integer, primary_key=True)

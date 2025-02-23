@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            {% for quest in quests %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h1 class="card-title display-4 font-monospace">{{ quest.question }}</h1>
+                    <p class="card-text">Option1: {{ quest.op1 }}</p>
+                    <p class="card-text">Option2: {{ quest.op2 }}</p>
+                    <p class="card-text">Option3: {{ quest.op3 }}</p>
+                    <p class="card-text">Option4: {{ quest.op4 }}</p>
+                    <p class="card-text">Correct option: {{ quest.cop }}</p>
+                    <a href="/questedit/{{quest.id}}" class="btn btn-secondary">Update</a>
+                    <a href="/questdel/{{quest.id}}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2>Add Question</h2>
+                <form action="/question/{{ q_id }}" method="post">
+                    <div class="mb-3">
+                        <label for="Question" class="form-label">Question</label>
+                        <input type="text" class="form-control" name="question" id="Question">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Op1" class="form-label">Option 1</label>
+                        <input type="text" class="form-control" name="op1" id="Op1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Op2" class="form-label">Option 2</label>
+                        <input type="text" class="form-control" name="op2" id="Op2">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Op3" class="form-label">Option 3</label>
+                        <input type="text" class="form-control" name="op3" id="Op3">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Op4" class="form-label">Option 4</label>
+                        <input type="text" class="form-control" name="op4" id="Op4">
+                    </div>
+                    <p>Choose correct option</p>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
+                        <label class="form-check-label" for="inlineRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+                        <label class="form-check-label" for="inlineRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3">
+                        <label class="form-check-label" for="inlineRadio3">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="4">
+                        <label class="form-check-label" for="inlineRadio3">4</label>
+                    </div>
+                    <br>
+                    <br>
+                    <button class="btn btn-primary w-100 py-2" type="submit">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            {% for quiz in quizzes %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h1 class="card-title display-3 font-monospace">{{ quiz.remarks }}</h1>
+                    <p class="card-text">Date: {{ quiz.date }}</p>
+                    <p class="card-text">Duration: {{ quiz.time_duration }} minutes</p>
+                    <table class="table">
+                        {% for question in quiz.questions %}
+                        <tr>
+                            <td><em></em></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <a href="" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a>
+                            </td>
+                            <td></td>
+                            <td>
+                                <a href="" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <a href="/question/{{quiz.id}}" class="btn btn-secondary">Add/View Questions</a>
+                    <a href="/quizedit/{{quiz.id}}" class="btn btn-warning">Update</a>
+                    <a href="/quizdelete/{{quiz.id}}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2>Add Quiz</h2>
+                <form action="/qdisplay/{{ c_id }}" method="post">
+                    <div class="mb-3">
+                        <label for="InputQual" class="form-label">Timeduration in minutes</label>
+                        <input type="text" class="form-control" name="timed" id="InputQual">
+                    </div>
+                    <div class="mb-3">
+                        <label for="InputDate" class="form-label">Date of quiz</label>
+                        <input type="date" class="form-control" name="doq" id="InputDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Remarks</label>
+                        <input type="text" class="form-control" name="remarks" id="exampleInputPassword1">
+                    </div>
+                    <br>
+                    <button class="btn btn-primary w-100 py-2" type="submit">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
