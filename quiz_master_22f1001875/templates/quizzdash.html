@@ -28,13 +28,18 @@
                         </tr>
                         {% endfor %}
                     </table>
+                    {% if sup==1 %}
                     <a href="/question/{{quiz.id}}" class="btn btn-secondary">Add/View Questions</a>
                     <a href="/quizedit/{{quiz.id}}" class="btn btn-warning">Update</a>
                     <a href="/quizdelete/{{quiz.id}}" class="btn btn-danger">Delete</a>
+                    {% else %}
+                    <a href="/quizattempt/{{quiz.id}}" class="btn btn-secondary">Attempt Quiz</a>
+                    {%endif%}
                 </div>
             </div>
             {% endfor %}
         </div>
+        {%if sup%}
         <div class="col-md-6">
             <div class="card p-4">
                 <h2>Add Quiz</h2>
@@ -56,6 +61,7 @@
                 </form>
             </div>
         </div>
+        {%endif%}
     </div>
 </div>
 {% endblock %}

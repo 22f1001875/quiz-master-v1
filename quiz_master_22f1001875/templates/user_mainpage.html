@@ -2,34 +2,35 @@
 {% block content %}
 <br>
 <br>
-<div class="mx-4 m-auto flex-column align-items-center justify-content-center">
-    <div class="col-sm-1 mb-3 mb-sm-0">
-        <div class="card">
-          <div class="card-body">
-            <a href="#" class="btn btn-secondary">Add Subjects</a>
-          </div>
-        </div>
-      </div>
-      <br>
-    <div class="row">
-        <div class="col-sm-6 mb-3 mb-sm-0">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+<div class="mx-4">
+      {% if subjects %}
+        <div class="row">
+          {% for subject in subjects %}
+            <div class="col-sm-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h1 class="card-title display-3 font-monospace">{{ subject.name }}</h1>
+                  <p class="card-text">{{ subject.description }}</p>
+                  <table class="table">
+                  {%for chapter in subject.chapters%}
+                  <tr>
+                    <td><em>{{ chapter.name }}</em></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="/qdisplay/{{chapter.id}}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a></td>
+                  </tr>                
+                  {%endfor%}
+                </table>
+                </div>
+              </div>
             </div>
-          </div>
+            {% if loop.index is divisibleby(2) and not loop.last %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
         </div>
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </div>
-      </div>
+    {% endif %}
 </div>
+
   {% endblock %}

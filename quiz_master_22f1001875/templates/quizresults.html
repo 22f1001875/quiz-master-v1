@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br>
+
+<div class="container">
+    <h1 class="display-3">You scored {{sc}} out of {{tt}}</h1>
+    {%if wa%}
+    <br>
+    <h2 class="display-6">Wrong Answers:</h2>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            {% for wrong in wa %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h1 class="card-title display-4 font-monospace">{{ wrong.question }}</h1>
+                    <br>
+                    <p class="card-text">1) {{ wrong.op1 }}</p>
+                    <p class="card-text">2) {{wrong.op2 }}</p>
+                    <p class="card-text">3) {{ wrong.op3 }}</p>
+                    <p class="card-text">4) {{ wrong.op4 }}</p>
+                    <p class="card-text">Correct opttion is {{ wrong.cop }}st one!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {%endif%}
+</div>
+{% endblock %}

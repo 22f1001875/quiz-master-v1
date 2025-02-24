@@ -19,7 +19,8 @@ def login():
             return redirect(url_for("admin", name=usr.f_name))
         elif usr and usr.is_superuser==0:
             session['user']=usr.f_name
-            return render_template("user_mainpage.html",user=usr.f_name)
+            session['sup']=usr.is_superuser
+            return redirect(url_for("user",name=usr.f_name))
         else:
             messages="Something went wrong. Try again"
     return render_template("login.html",messages=messages)
@@ -49,7 +50,8 @@ def register():
 @app.route("/admin/<name>")
 def admin(name):
     subs = Subject.query.all()
-    return render_template("admin_dashboard.html",user=name,subjects=subs)
+    sup=session.get('sup')
+    return render_template("admin_dashboard.html",user=name,subjects=subs,sup=sup)
 
 @app.route("/addsub",methods=["GET","POST"])
 def addsub():
@@ -66,10 +68,12 @@ def addsub():
         db.session.commit()
         sub_id=Subject.query.filter_by(name=name).first().id
         return redirect(url_for("addchap",sub_id=sub_id))
-    return render_template("addsubs.html",user=user)
+    sup=session.get('sup')
+    return render_template("addsubs.html",user=user,sup=sup)
 
 @app.route("/addchap/<int:sub_id>",methods=["POST","GET"])
 def addchap(sub_id):
+    sup=session.get('sup')
     message=None
     user = session.get('user')
     if 'sup' not in session and 'user' in session:
@@ -82,7 +86,7 @@ def addchap(sub_id):
         db.session.add(new_chap)
         db.session.commit()
         message="Successfully added"
-    return render_template("addchap.html",sub_id=sub_id, message=message,user=user)
+    return render_template("addchap.html",sub_id=sub_id, message=message,user=user,sup=sup)
 
 @app.route("/dels/<int:id>",methods=["GET","POST"])
 def dels(id):
@@ -114,6 +118,7 @@ def delc(id):
 
 @app.route("/qdisplay/<int:c_id>",methods=["GET","POST"])
 def qdisplay(c_id):
+    sup=session.get('sup')
     if request.method=="POST":
         tt=request.form.get('timed')
         doq=request.form.get('doq')
@@ -128,7 +133,7 @@ def qdisplay(c_id):
         return redirect(url_for('qdisplay', c_id=c_id))
     user=session.get('user')
     quizzes=Quiz.query.filter_by(c_id=c_id).all()
-    return render_template("quizzdash.html",quizzes=quizzes,user=user,c_id=c_id)
+    return render_template("quizzdash.html",quizzes=quizzes,user=user,c_id=c_id,sup=sup)
 
 @app.route("/quizdelete/<int:q_id>")
 def quizdelete(q_id):
@@ -141,6 +146,7 @@ def quizdelete(q_id):
 @app.route("/question/<int:q_id>",methods=["POST","GET"])
 def questions(q_id):
     user=session.get('user')
+    sup=session.get('sup')
     quests=Questions.query.filter_by(q_id=q_id)
     if request.method=="POST":
         question=request.form.get('question')
@@ -153,7 +159,7 @@ def questions(q_id):
         db.session.add(new_question)
         db.session.commit()
         return redirect(url_for("questions",q_id=q_id))
-    return render_template("questiondash.html",quests=quests,q_id=q_id,user=user)
+    return render_template("questiondash.html",quests=quests,q_id=q_id,user=user,sup=sup)
 
 @app.route("/questdel/<int:questid>")
 def questdel(questid):
@@ -216,3 +222,27 @@ def questedit(id):
         db.session.commit()
         return redirect(url_for("questions",q_id=q_id))  
     return render_template("questedit.html",user=user,id=id)
+
+
+@app.route("/user/<name>")
+def user(name):
+    subs = Subject.query.all()
+    return render_template("user_mainpage.html",user=name,subjects=subs)
+
+@app.route("/quizattempt/<int:id>",methods=["GET","POST"])
+def quizattempt(id):
+    quest=Questions.query.filter_by(q_id=id).all()
+    user=session.get('user')
+    sc=0
+    tt=0
+    l=[]
+    if request.method=="POST":
+        for i in request.form:
+            tt+=1
+            if Questions.query.filter_by(id=int(i)).first().cop==int(request.form.get(i)):
+                sc+=1
+            else:
+                l.append(int(i))
+        wa=Questions.query.filter(Questions.id.in_(l)).all()
+        return render_template("quizresults.html",wa=wa,sc=sc,tt=tt,user=user)
+    return render_template("quizattempt.html",questions=quest,q_id=id,user=user)
