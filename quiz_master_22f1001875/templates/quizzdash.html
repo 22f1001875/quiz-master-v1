@@ -33,7 +33,10 @@
                     <a href="/quizedit/{{quiz.id}}" class="btn btn-warning">Update</a>
                     <a href="/quizdelete/{{quiz.id}}" class="btn btn-danger">Delete</a>
                     {% else %}
-                    <a href="/quizattempt/{{quiz.id}}" class="btn btn-secondary">Attempt Quiz</a>
+                    <form action="/attempt" method="post">
+                        <input type="hidden" name="quizid" value="{{quiz.id}}">
+                        <button type="submit">Attempt Quiz</button>
+                    </form>
                     {%endif%}
                 </div>
             </div>

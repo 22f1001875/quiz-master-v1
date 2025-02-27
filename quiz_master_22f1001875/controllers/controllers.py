@@ -1,7 +1,7 @@
 from flask import Flask,render_template,request,redirect,url_for,session
 from flask import current_app as app
 from models.models import *
-from datetime import date
+from datetime import date,datetime
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -14,10 +14,12 @@ def login():
         pwd=request.form.get("pwd")
         usr=Users.query.filter_by(mail=mail,pwd=pwd).first()
         if usr and usr.is_superuser:
+            session['id']=usr.id
             session['user']=usr.f_name
             session['sup']=usr.is_superuser
             return redirect(url_for("admin", name=usr.f_name))
         elif usr and usr.is_superuser==0:
+            session['id']=usr.id
             session['user']=usr.f_name
             session['sup']=usr.is_superuser
             return redirect(url_for("user",name=usr.f_name))
@@ -229,20 +231,56 @@ def user(name):
     subs = Subject.query.all()
     return render_template("user_mainpage.html",user=name,subjects=subs)
 
+
+@app.route('/attempt', methods=['POST'])
+def attempt_redirect():
+    global tume
+    quizid = request.form.get("quizid")
+    clicked_time = datetime.now().strftime("%H:%M:%S").split(':')
+    teme=int(clicked_time[0])*3600+int(clicked_time[1])*60+int(clicked_time[2])
+    tume = int(teme)
+    return redirect(url_for('quizattempt', id=quizid))
+
+
 @app.route("/quizattempt/<int:id>",methods=["GET","POST"])
 def quizattempt(id):
     quest=Questions.query.filter_by(q_id=id).all()
     user=session.get('user')
     sc=0
     tt=0
-    l=[]
     if request.method=="POST":
-        for i in request.form:
-            tt+=1
-            if Questions.query.filter_by(id=int(i)).first().cop==int(request.form.get(i)):
-                sc+=1
+        session['wa']=[]
+        clicked_time = datetime.now().strftime("%H:%M:%S").split(':')
+        teme=int(clicked_time[0])*3600+int(clicked_time[1])*60+int(clicked_time[2])
+        k=teme-tume
+        if Quiz.query.filter_by(id=id).first().time_duration*60>k:
+            for i in request.form:
+                tt+=1
+                if Questions.query.filter_by(id=int(i)).first().cop==int(request.form.get(i)):
+                    sc+=1
+                else:
+                    session['wa'].append(int(i))
+            u_id=session.get('id')
+            nscore=Scores.query.filter_by(u_id=u_id,q_id=id).first()
+            if nscore:
+                nscore.score=sc
             else:
-                l.append(int(i))
-        wa=Questions.query.filter(Questions.id.in_(l)).all()
-        return render_template("quizresults.html",wa=wa,sc=sc,tt=tt,user=user)
+                new_score=Scores(u_id=u_id,q_id=id,score=sc)
+                db.session.add(new_score)
+            session['sc'] = sc
+            session['tt'] = tt
+            db.session.commit()
+            return redirect(url_for("quiz_results", q_id=id))
+        else:
+            return 
     return render_template("quizattempt.html",questions=quest,q_id=id,user=user)
+
+@app.route("/quizresults/<int:q_id>")
+def quiz_results(q_id):
+    wa_ids = session.pop('wa', [])
+    sc = session.pop('sc', 0)
+    tt = session.pop('tt', 0)
+    
+    wa = Questions.query.filter(Questions.id.in_(wa_ids)).all()
+    
+    return render_template("quizresults.html", wa=wa, sc=sc, tt=tt, user=user)
