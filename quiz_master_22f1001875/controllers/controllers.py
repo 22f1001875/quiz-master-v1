@@ -52,14 +52,14 @@ def register():
 @app.route("/admin/<name>")
 def admin(name):
     subs = Subject.query.all()
-    sup=session.get('sup')
-    return render_template("admin_dashboard.html",user=name,subjects=subs,sup=sup)
+    return render_template("admin_dashboard.html",user=name,subjects=subs)
 
 @app.route("/addsub",methods=["GET","POST"])
 def addsub():
     user = session.get('user')
-    if 'sup' not in session and 'user' in session:
-        return render_template('user_mainpage.html',user=user)
+    if 'user' in session:
+        if session['sup']!=1:
+            return render_template('user_mainpage.html',user=user)
     elif 'user' not in session:
         return redirect("/login")
     if request.method=="POST":
@@ -71,11 +71,10 @@ def addsub():
         sub_id=Subject.query.filter_by(name=name).first().id
         return redirect(url_for("addchap",sub_id=sub_id))
     sup=session.get('sup')
-    return render_template("addsubs.html",user=user,sup=sup)
+    return render_template("addsubs.html")
 
 @app.route("/addchap/<int:sub_id>",methods=["POST","GET"])
 def addchap(sub_id):
-    sup=session.get('sup')
     message=None
     user = session.get('user')
     if 'sup' not in session and 'user' in session:
@@ -88,7 +87,7 @@ def addchap(sub_id):
         db.session.add(new_chap)
         db.session.commit()
         message="Successfully added"
-    return render_template("addchap.html",sub_id=sub_id, message=message,user=user,sup=sup)
+    return render_template("addchap.html",sub_id=sub_id, message=message)
 
 @app.route("/dels/<int:id>",methods=["GET","POST"])
 def dels(id):
@@ -120,7 +119,6 @@ def delc(id):
 
 @app.route("/qdisplay/<int:c_id>",methods=["GET","POST"])
 def qdisplay(c_id):
-    sup=session.get('sup')
     if request.method=="POST":
         tt=request.form.get('timed')
         doq=request.form.get('doq')
@@ -133,9 +131,8 @@ def qdisplay(c_id):
         user=session.get('user')
         quizzes=Quiz.query.filter_by(c_id=c_id).all()
         return redirect(url_for('qdisplay', c_id=c_id))
-    user=session.get('user')
     quizzes=Quiz.query.filter_by(c_id=c_id).all()
-    return render_template("quizzdash.html",quizzes=quizzes,user=user,c_id=c_id,sup=sup)
+    return render_template("quizzdash.html",quizzes=quizzes,c_id=c_id)
 
 @app.route("/quizdelete/<int:q_id>")
 def quizdelete(q_id):
@@ -147,8 +144,6 @@ def quizdelete(q_id):
 
 @app.route("/question/<int:q_id>",methods=["POST","GET"])
 def questions(q_id):
-    user=session.get('user')
-    sup=session.get('sup')
     quests=Questions.query.filter_by(q_id=q_id)
     if request.method=="POST":
         question=request.form.get('question')
@@ -161,7 +156,7 @@ def questions(q_id):
         db.session.add(new_question)
         db.session.commit()
         return redirect(url_for("questions",q_id=q_id))
-    return render_template("questiondash.html",quests=quests,q_id=q_id,user=user,sup=sup)
+    return render_template("questiondash.html",quests=quests,q_id=q_id)
 
 @app.route("/questdel/<int:questid>")
 def questdel(questid):
@@ -172,24 +167,22 @@ def questdel(questid):
 
 @app.route("/subjedit/<int:sub_id>",methods=["POST","GET"])
 def subjedit(sub_id):
-    user=session.get('user')
     s=Subject.query.filter_by(id=sub_id).first()
     if request.method=="POST":
         s.name=request.form.get('sname')
         s.description=request.form.get('description')
         db.session.commit()
         return redirect(url_for("admin",name=user))
-    return render_template("subjedit.html",sub_id=sub_id,user=user)
+    return render_template("subjedit.html",sub_id=sub_id)
 
 @app.route("/chapedit/<int:id>",methods=["GET","POST"])
 def chapedit(id):
-    user=session.get('user')
     c=Chapter.query.filter_by(id=id).first()
     if request.method=="POST":
         c.name=request.form.get('cname')
         db.session.commit()
         return redirect(url_for("admin",name=user))
-    return render_template("chapedit.html",c_id=id,user=user)
+    return render_template("chapedit.html",c_id=id)
 
 @app.route("/quizedit/<int:id>",methods=["GET","POST"])
 def quizedit(id):
@@ -210,7 +203,6 @@ def quizedit(id):
 
 @app.route("/questedit/<int:id>",methods=["POST","GET"])
 def questedit(id):
-    user=session.get('user')
     q_id=Questions.query.filter_by(id=id).first().q_id
     q=Questions.query.filter_by(id=id).first()
     if request.method=="POST":
@@ -223,7 +215,7 @@ def questedit(id):
         q.q_id=q_id
         db.session.commit()
         return redirect(url_for("questions",q_id=q_id))  
-    return render_template("questedit.html",user=user,id=id)
+    return render_template("questedit.html",id=id)
 
 
 @app.route("/user/<name>")
@@ -245,7 +237,6 @@ def attempt_redirect():
 @app.route("/quizattempt/<int:id>",methods=["GET","POST"])
 def quizattempt(id):
     quest=Questions.query.filter_by(q_id=id).all()
-    user=session.get('user')
     sc=0
     tt=0
     if request.method=="POST":
@@ -270,17 +261,48 @@ def quizattempt(id):
             session['sc'] = sc
             session['tt'] = tt
             db.session.commit()
-            return redirect(url_for("quiz_results", q_id=id))
+            return redirect(url_for("quiz_results"))
         else:
-            return 
-    return render_template("quizattempt.html",questions=quest,q_id=id,user=user)
+            return "Time Limit Exceeded"
+    return render_template("quizattempt.html",questions=quest,q_id=id)
 
-@app.route("/quizresults/<int:q_id>")
-def quiz_results(q_id):
+@app.route("/quizresults")
+def quiz_results():
     wa_ids = session.pop('wa', [])
     sc = session.pop('sc', 0)
     tt = session.pop('tt', 0)
-    
     wa = Questions.query.filter(Questions.id.in_(wa_ids)).all()
-    
-    return render_template("quizresults.html", wa=wa, sc=sc, tt=tt, user=user)
+    return render_template("quizresults.html", wa=wa, sc=sc, tt=tt)
+
+@app.route("/allquizres")
+def allqres():
+    id=session.get('id')
+    results=db.session.query(Subject.name, Chapter.name, Quiz.id, Scores.score).join(Chapter, Subject.id==Chapter.s_id).join(Quiz, Quiz.c_id==Chapter.id).join(Scores,Scores.q_id==Quiz.id).filter(Scores.u_id==id).all()
+    return render_template("quizresults.html",qres=results)
+
+@app.route("/search")
+def search():
+    message=None
+    searchchap=None
+    searchsub=None
+    searchquestion=None
+    searchquiz=None
+    searchuser=None
+    query = request.args.get('query', '')
+    sup=session.get('sup')
+    if query!='':
+        if sup==1:
+            searchsub=Subject.query.filter(Subject.name.ilike("%"+query+"%")).all()
+            searchchap=Chapter.query.filter(Chapter.name.ilike("%"+query+"%")).all()
+            searchquiz=Quiz.query.filter(Quiz.remarks.ilike("%"+query+"%")).all()
+            searchuser=Users.query.filter(Users.f_name.ilike("%"+query+"%")).all()
+            searchquestion=Questions.query.filter(Questions.question.ilike("%"+query+"%")).all()
+        elif sup==0:
+            searchsub=Subject.query.filter(Subject.name.ilike("%"+query+"%")).all()
+            searchquiz=Quiz.query.filter(Quiz.remarks.ilike("%"+query+"%")).all()
+        else:
+            return redirect(url_for("login"))
+
+    if searchsub == None and searchchap==None and searchquestion==None and searchquiz==None and searchuser==None or searchsub == [] and searchchap==[] and searchquestion==[] and searchquiz==[] and searchuser==[]:
+        message="Found Nothing"
+    return render_template("searchres.html",sub=searchsub,chap=searchchap,message=message,quiz=searchquiz,use=searchuser,question=searchquestion)

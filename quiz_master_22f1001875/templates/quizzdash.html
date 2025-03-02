@@ -11,24 +11,7 @@
                     <h1 class="card-title display-3 font-monospace">{{ quiz.remarks }}</h1>
                     <p class="card-text">Date: {{ quiz.date }}</p>
                     <p class="card-text">Duration: {{ quiz.time_duration }} minutes</p>
-                    <table class="table">
-                        {% for question in quiz.questions %}
-                        <tr>
-                            <td><em></em></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <a href="" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a>
-                            </td>
-                            <td></td>
-                            <td>
-                                <a href="" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Delete</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                    {% if sup==1 %}
+                    {% if session['sup'] %}
                     <a href="/question/{{quiz.id}}" class="btn btn-secondary">Add/View Questions</a>
                     <a href="/quizedit/{{quiz.id}}" class="btn btn-warning">Update</a>
                     <a href="/quizdelete/{{quiz.id}}" class="btn btn-danger">Delete</a>
@@ -42,7 +25,7 @@
             </div>
             {% endfor %}
         </div>
-        {%if sup%}
+        {%if session['sup']%}
         <div class="col-md-6">
             <div class="card p-4">
                 <h2>Add Quiz</h2>

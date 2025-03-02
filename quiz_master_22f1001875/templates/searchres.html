@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+{%if message%}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{%endif%}
+<br>
+<br>
+{% if sub %}
+<div class="mx-4">
+    <h1 class="display-5">Subjects</h1>
+        <div class="row">
+          {% for subject in sub %}
+            <div class="col-sm-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h1 class="card-title display-3 font-monospace">{{ subject.name }}</h1>
+                  <table class="table">
+                  {%for chapter in subject.chapters%}
+                  <tr>
+                    <td><em>{{ chapter.name }}</em></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="/qdisplay/{{chapter.id}}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a></td>
+                    <td><a href="/chapedit/{{chapter.id}}" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Update</a></td>
+                    <td><a href="/delc/{{chapter.id}}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Delete</a></td>
+                  </tr>                
+                  {%endfor%}
+                </table>
+                  <a href="/addchap/{{subject.id}}" class="btn btn-info">Add Chapters</a>
+                  <a href="/subjedit/{{subject.id}}" class="btn btn-warning">Update</a>
+                  <a href="/dels/{{subject.id}}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+            {% if loop.index is divisibleby(2) and not loop.last %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<br>
+{% if chap %}
+<div class="mx-4">
+    <h1 class="display-5">Chapters</h1>
+        <div class="row">
+          {% for chapter in chap %}
+            <div class="col-sm-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h1 class="card-title display-3 font-monospace">{{ chapter.name }}</h1>
+                  <a href="/qdisplay/{{chapter.id}}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a>
+                  <a href="/chapedit/{{chapter.id}}" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Update</a>
+                  <td><a href="/delc/{{chapter.id}}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Delete</a>
+                </div>
+              </div>
+            </div>
+            {% if loop.index is divisibleby(2) and not loop.last %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<br>
+{% if quiz %}
+<div class="mx-4">
+    <h1 class="display-5">Quizzes</h1>
+        <div class="row">
+          {% for q in quiz %}
+            <div class="col-sm-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h1 class="card-title display-3 font-monospace">{{ q.remarks }}</h1>
+                  <a href="/question/{{q.id}}" class="btn btn-secondary">Add/View Questions</a>
+                  <a href="/quizedit/{{q.id}}" class="btn btn-warning">Update</a>
+                  <a href="/quizdelete/{{q.id}}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+            {% if loop.index is divisibleby(2) and not loop.last %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<br>
+{% if use %}
+<div class="mx-4">
+    <h1 class="display-5">Users</h1>
+        <div class="row">
+          {% for u in use %}
+            <div class="col-sm-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h1 class="card-title display-3 font-monospace">{{ u.f_name }}</h1>
+                  <p class="card-text">{{ u.mail }}</p>
+                </div>
+              </div>
+            </div>
+            {% if loop.index is divisibleby(2) and not loop.last %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
+</div>
+<br>
+{% if question %}
+<div class="mx-4">
+    <h1 class="display-5">Questions</h1>
+        <div class="row">
+          {% for que in question %}
+            <div class="col-sm-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h1 class="card-title display-3 font-monospace">{{ que.question }}</h1>
+                  <a href="/questedit/{{ que.id }}" class="btn btn-warning">Update</a>
+                  <a href="/questdel/{{que.id}}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+            {% if loop.index is divisibleby(2) and not loop.last %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
+</div>
+  {% endblock %}

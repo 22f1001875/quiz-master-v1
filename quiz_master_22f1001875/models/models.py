@@ -42,6 +42,7 @@ class Questions(db.Model):
     cop=db.Column(db.Integer,nullable=False)
 
 class Scores(db.Model):
-    q_id=db.Column(db.Integer,db.ForeignKey('quiz.id', ondelete="CASCADE"),primary_key=True)
-    u_id=db.Column(db.Integer,db.ForeignKey('users.id', ondelete="CASCADE"),primary_key=True)
+    id=db.Column(db.Integer, primary_key=True)
+    q_id=db.Column(db.Integer,db.ForeignKey('quiz.id', ondelete="CASCADE"))
+    u_id=db.Column(db.Integer,db.ForeignKey('users.id', ondelete="CASCADE"))
     score=db.Column(db.Integer,nullable=False)

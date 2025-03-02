@@ -3,6 +3,29 @@
 <br><br>
 
 <div class="container">
+    {%if qres%}
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Subject</th>
+            <th scope="col">Chapter</th>
+            <th scope="col">Quiz ID</th>
+            <th scope="col">Score</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for subject, chapter, quiz_id, score in qres %}
+          <tr>
+            <td>{{ subject }}</td>
+            <td>{{ chapter }}</td>
+            <td>{{ quiz_id }}</td>
+            <td>{{ score }}</td>
+        </tr>
+        {%endfor%}
+        </tbody>
+      </table>
+      {%endif%}
+    {%if tt%}
     <h1 class="display-3">You scored {{sc}} out of {{tt}}</h1>
     {%if wa%}
     <br>
@@ -25,6 +48,7 @@
             {% endfor %}
         </div>
     </div>
+    {%endif%}
     {%endif%}
 </div>
 {% endblock %}
