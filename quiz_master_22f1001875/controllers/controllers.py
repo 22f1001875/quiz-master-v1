@@ -130,7 +130,6 @@ def qdisplay(c_id):
         new_quiz=Quiz(date=dateofq,time_duration=tt,remarks=remarks,c_id=c_id)
         db.session.add(new_quiz)
         db.session.commit()
-        user=session.get('user')
         quizzes=Quiz.query.filter_by(c_id=c_id).all()
         return redirect(url_for('qdisplay', c_id=c_id))
     quizzes = Quiz.query.filter_by(c_id=c_id, date=today).all()
@@ -224,17 +223,20 @@ def questedit(id):
 
 @app.route("/user/<name>")
 def user(name):
+    message=None
+    if 'messages' in session:
+        message=session['messages']
+        session['messages']=[]
     subs = Subject.query.all()
-    return render_template("user_mainpage.html",user=name,subjects=subs)
+    return render_template("user_mainpage.html",user=name,subjects=subs,message=message)
 
 
 @app.route('/attempt', methods=['POST'])
 def attempt_redirect():
-    global tume
     quizid = request.form.get("quizid")
     clicked_time = datetime.now().strftime("%H:%M:%S").split(':')
     teme=int(clicked_time[0])*3600+int(clicked_time[1])*60+int(clicked_time[2])
-    tume = int(teme)
+    session['tume'] = int(teme)
     return redirect(url_for('quizattempt', id=quizid))
 
 
@@ -247,7 +249,7 @@ def quizattempt(id):
         session['wa']=[]
         clicked_time = datetime.now().strftime("%H:%M:%S").split(':')
         teme=int(clicked_time[0])*3600+int(clicked_time[1])*60+int(clicked_time[2])
-        k=teme-tume
+        k=teme-session['tume']
         if Quiz.query.filter_by(id=id).first().time_duration*60>k:
             for i in request.form:
                 tt+=1
@@ -267,7 +269,8 @@ def quizattempt(id):
             db.session.commit()
             return redirect(url_for("quiz_results"))
         else:
-            return "Time Limit Exceeded"
+            session['messages']="Time Limit Exceeded"
+            return redirect(url_for("user",name=session['user']))
     return render_template("quizattempt.html",questions=quest,q_id=id)
 
 @app.route("/quizresults")
