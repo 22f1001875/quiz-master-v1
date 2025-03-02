@@ -5,6 +5,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
+            {%if quizzes%}
+            <h1 class="display-3">Today's Quizzes</h1>
             {% for quiz in quizzes %}
             <div class="card mb-3">
                 <div class="card-body">
@@ -24,6 +26,45 @@
                 </div>
             </div>
             {% endfor %}
+            {%endif%}
+            <br>
+            <br>
+            {%if quizupcoming%}
+            <h1 class="display-3">Upcoming Quizzes</h1>
+            {% for quiz in quizupcoming %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h1 class="card-title display-3 font-monospace">{{ quiz.remarks }}</h1>
+                    <p class="card-text">Date: {{ quiz.date }}</p>
+                    <p class="card-text">Duration: {{ quiz.time_duration }} minutes</p>
+                    {% if session['sup'] %}
+                    <a href="/question/{{quiz.id}}" class="btn btn-secondary">Add/View Questions</a>
+                    <a href="/quizedit/{{quiz.id}}" class="btn btn-warning">Update</a>
+                    <a href="/quizdelete/{{quiz.id}}" class="btn btn-danger">Delete</a>
+                    {%endif%}
+                </div>
+            </div>
+            {% endfor %}
+            {%endif%}
+            <br>
+            <br>
+            {%if quizprev%}
+            <h1 class="display-3">Previous Quizzes</h1>
+            {% for quiz in quizprev %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h1 class="card-title display-3 font-monospace">{{ quiz.remarks }}</h1>
+                    <p class="card-text">Date: {{ quiz.date }}</p>
+                    <p class="card-text">Duration: {{ quiz.time_duration }} minutes</p>
+                    {% if session['sup'] %}
+                    <a href="/question/{{quiz.id}}" class="btn btn-secondary">Add/View Questions</a>
+                    <a href="/quizedit/{{quiz.id}}" class="btn btn-warning">Update</a>
+                    <a href="/quizdelete/{{quiz.id}}" class="btn btn-danger">Delete</a>
+                    {%endif%}
+                </div>
+            </div>
+            {% endfor %}
+            {%endif%}
         </div>
         {%if session['sup']%}
         <div class="col-md-6">

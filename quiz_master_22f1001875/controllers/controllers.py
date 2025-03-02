@@ -2,6 +2,8 @@ from flask import Flask,render_template,request,redirect,url_for,session
 from flask import current_app as app
 from models.models import *
 from datetime import date,datetime
+
+today = date.today()
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -131,8 +133,10 @@ def qdisplay(c_id):
         user=session.get('user')
         quizzes=Quiz.query.filter_by(c_id=c_id).all()
         return redirect(url_for('qdisplay', c_id=c_id))
-    quizzes=Quiz.query.filter_by(c_id=c_id).all()
-    return render_template("quizzdash.html",quizzes=quizzes,c_id=c_id)
+    quizzes = Quiz.query.filter_by(c_id=c_id, date=today).all()
+    quizprev=Quiz.query.filter(Quiz.c_id == c_id, Quiz.date < today).all()
+    quizupcoming=Quiz.query.filter(Quiz.c_id == c_id, Quiz.date > today).all()
+    return render_template("quizzdash.html",quizzes=quizzes,c_id=c_id,quizprev=quizprev,quizupcoming=quizupcoming)
 
 @app.route("/quizdelete/<int:q_id>")
 def quizdelete(q_id):
