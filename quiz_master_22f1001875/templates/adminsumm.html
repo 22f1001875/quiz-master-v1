@@ -7,16 +7,16 @@
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">Subject</th>
+            <th scope="col">User</th>
             <th scope="col">Chapter</th>
             <th scope="col">Quiz ID</th>
             <th scope="col">Score</th>
           </tr>
         </thead>
         <tbody>
-        {% for subject, chapter, quiz_id, score in qres %}
+        {% for user, chapter, quiz_id, score in qres %}
           <tr>
-            <td>{{ subject }}</td>
+            <td>{{ user }}</td>
             <td>{{ chapter }}</td>
             <td>{{ quiz_id }}</td>
             <td>{{ score }}</td>
@@ -31,34 +31,43 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script>
-        const label = {{ labels | safe }};
-        const score = {{ scores | safe }};
-    
-        const ctx = document.getElementById('myChart').getContext('2d');
-    
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: label,
-                datasets: [{
-                    label: 'Quiz Scores',
-                    data: score,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+
+<script>
+    const users = {{ users | tojson }};
+    const labels = {{ labels | tojson }};
+    const scores = {{ scores | tojson }};
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Score',
+                data: scores,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: (tooltipItems) => users[tooltipItems[0].dataIndex]
                     }
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        });
-    </script>    
+        }
+    });
+</script>
+    
       {%endif%}
     {%if tt%}
     <h1 class="display-3">You scored {{sc}} out of {{tt}}</h1>

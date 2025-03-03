@@ -285,7 +285,13 @@ def quiz_results():
 def allqres():
     id=session.get('id')
     results=db.session.query(Subject.name, Chapter.name, Quiz.id, Scores.score).join(Chapter, Subject.id==Chapter.s_id).join(Quiz, Quiz.c_id==Chapter.id).join(Scores,Scores.q_id==Quiz.id).filter(Scores.u_id==id).all()
-    return render_template("quizresults.html",qres=results)
+    chart=db.session.query(Chapter.name,Quiz.id,Scores.score).join(Quiz,Chapter.id==Quiz.c_id).join(Scores,Quiz.id==Scores.q_id).filter(Scores.u_id==id).all()
+    labels=[]
+    scores=[]
+    for i in chart:
+        labels.append(i[0])
+        scores.append(i[2])
+    return render_template("quizresults.html",qres=results,labels=labels,scores=scores)
 
 @app.route("/search")
 def search():
@@ -313,3 +319,15 @@ def search():
     if searchsub == None and searchchap==None and searchquestion==None and searchquiz==None and searchuser==None or searchsub == [] and searchchap==[] and searchquestion==[] and searchquiz==[] and searchuser==[]:
         message="Found Nothing"
     return render_template("searchres.html",sub=searchsub,chap=searchchap,message=message,quiz=searchquiz,use=searchuser,question=searchquestion)
+
+@app.route("/adminsummary")
+def adminsumm():
+    results = db.session.query(Users.f_name, Chapter.name, Quiz.id, Scores.score).join(Scores, Users.id == Scores.u_id).join(Quiz, Scores.q_id == Quiz.id).join(Chapter, Quiz.c_id == Chapter.id).all()
+    labels=[]
+    scores=[]
+    users=[]
+    for i in results:
+        labels.append(i[0])
+        scores.append(i[3])
+        users.append(i[1])
+    return render_template("adminsumm.html",qres=results,labels=labels,scores=scores,users=users)
