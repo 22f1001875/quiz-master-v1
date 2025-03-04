@@ -6,15 +6,15 @@
     <form action="/quizedit/{{ q_id }}" method="post">
         <div class="mb-3">
             <label for="InputQual" class="form-label">Timeduration in minutes</label>
-            <input type="text" class="form-control" name="timed" id="InputQual">
+            <input type="text" class="form-control" name="timed" id="InputQual" required>
         </div>
         <div class="mb-3">
             <label for="InputDate" class="form-label">Date of quiz</label>
-            <input type="date" class="form-control" name="doq" id="InputDate">
+            <input type="date" class="form-control" name="doq" id="InputDate" required>
         </div>
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Remarks</label>
-            <input type="text" class="form-control" name="remarks" id="exampleInputPassword1">
+            <input type="text" class="form-control" name="remarks" id="exampleInputPassword1" required>
         </div>
         <br>
         <button class="btn btn-primary w-100 py-2" type="submit">Add</button>
