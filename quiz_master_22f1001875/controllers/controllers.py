@@ -37,6 +37,7 @@ def logout():
 
 @app.route("/register",methods=["GET","POST"])
 def register():
+    message=None
     if request.method=="POST":
         mail=request.form.get("mail")
         pwd=request.form.get("pwd")
@@ -45,11 +46,15 @@ def register():
         dob=request.form.get("dob")
         da=dob.split("-")
         dateofb=date(int(da[0]),int(da[1]),int(da[2]))
-        new_user=Users(mail=mail,pwd=pwd,f_name=fname,qual=qual,dob=dateofb)
-        db.session.add(new_user)
-        db.session.commit()
+        if not Users.query.filter_by(mail=mail).first():
+            new_user=Users(mail=mail,pwd=pwd,f_name=fname,qual=qual,dob=dateofb)
+            db.session.add(new_user)
+            db.session.commit()
+        else:
+            message="User Already Exists"
+            return render_template("register.html",mesa=message)
         return redirect("/login")
-    return render_template("register.html")
+    return render_template("register.html",mesa=message)
 
 @app.route("/admin/<name>")
 def admin(name):

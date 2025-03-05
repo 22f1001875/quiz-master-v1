@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
+{%if mesa%}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{mesa}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{%endif%}
 <div class="form-signin w-100 m-auto d-flex flex-column align-items-center justify-content-center vh-100" style="max-width: 350px;">
 <form action="/register" method="post">
     <img class="mb-4" src="{{ url_for('static', filename='images/1.png') }}" alt="1" width="314" height="284">

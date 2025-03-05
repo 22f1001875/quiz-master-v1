@@ -24,15 +24,21 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    {%if session['sup']%}
                     <td><a href="/qdisplay/{{chapter.id}}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a></td>
                     <td><a href="/chapedit/{{chapter.id}}" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Update</a></td>
                     <td><a href="/delc/{{chapter.id}}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Delete</a></td>
+                    {%else%}
+                    <td><a href="/qdisplay/{{chapter.id}}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Quizzes</a></td>
+                    {%endif%}
                   </tr>                
                   {%endfor%}
                 </table>
+                  {%if session['sup']%}
                   <a href="/addchap/{{subject.id}}" class="btn btn-info">Add Chapters</a>
                   <a href="/subjedit/{{subject.id}}" class="btn btn-warning">Update</a>
                   <a href="/dels/{{subject.id}}" class="btn btn-danger">Delete</a>
+                  {%endif%}
                 </div>
               </div>
             </div>
@@ -78,9 +84,13 @@
               <div class="card">
                 <div class="card-body">
                   <h1 class="card-title display-3 font-monospace">{{ q.remarks }}</h1>
+                  {%if session['sup']%}
                   <a href="/question/{{q.id}}" class="btn btn-secondary">Add/View Questions</a>
                   <a href="/quizedit/{{q.id}}" class="btn btn-warning">Update</a>
                   <a href="/quizdelete/{{q.id}}" class="btn btn-danger">Delete</a>
+                  {%else%}
+                  <a href="/quizattempt/{{q.id}}" class="btn btn-danger">Attempt</a>
+                  {%endif%}
                 </div>
               </div>
             </div>
